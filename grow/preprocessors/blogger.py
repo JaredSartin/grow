@@ -80,12 +80,14 @@ class BloggerPreprocessor(base.BasePreprocessor):
             posts_doc = request.execute()
             if 'items' in posts_doc and not (posts_doc['items'] is None):
                 items.extend(posts_doc['items'])
-            else:
+            elif not items:
                 logger.error('Received: {}'.format(posts_doc))
                 text = 'Unable to download Blogger blog: {}'
                 raise base.PreprocessorError(text.format(blog_id))
 
-            request = posts.list_next(request, posts_doc)
+            request = posts_doc.list_next(request, posts_doc)
+
+
 
         return items
 
